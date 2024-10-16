@@ -20,7 +20,7 @@ function createCard(cardData) {
   cardElement.querySelector('.card__title').textContent = cardData.name;
   cardElement.querySelector('.card__image').src = cardData.link;
   cardElement.querySelector('.card__image').alt = cardData.alt;
-  buttonDelete.addEventListener('click', removeCard);
+  buttonDelete.addEventListener('click', () => deleteCard(cardElement));
 
   return cardElement;
 }
@@ -30,8 +30,8 @@ function addCard(cardData) {
   cardsContainer.append(card);
 }
 
-function removeCard(evt) {
-  evt.target.parentElement.remove();
+function deleteCard(card) {
+  card.remove();
 }
 
 cardData.forEach(addCard);
