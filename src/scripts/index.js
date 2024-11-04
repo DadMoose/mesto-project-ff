@@ -7,6 +7,7 @@
 // @todo: Функция удаления карточки
 
 // @todo: Вывести карточки на страницу
+import '../pages/index.css';
 
 const content = document.querySelector('.content');
 const cardsContainer = content.querySelector('.places__list');
