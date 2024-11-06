@@ -8,10 +8,14 @@ const cardsContainer = content.querySelector('.places__list');
 const popupTypeEdit = document.querySelector('.popup_type_edit');
 const popupTypeNewCard = document.querySelector('.popup_type_new-card');
 const popupTypeImage = document.querySelector('.popup_type_image');
-const nameInput = document.querySelector('.popup__input_type_name');
-const jobInput = document.querySelector('.popup__input_type_description');
-const profileTitle = document.querySelector('.profile__title');
-const profileDescription = document.querySelector('.profile__description');
+const nameInput = popupTypeEdit.querySelector('.popup__input_type_name');
+const jobInput = popupTypeEdit.querySelector('.popup__input_type_description');
+const profileTitle = content.querySelector('.profile__title');
+const profileDescription = content.querySelector('.profile__description');
+const addImageForm = popupTypeNewCard.querySelector('.popup__form');
+const placeNameInput = popupTypeNewCard.querySelector('.popup__input_type_card-name');
+const linkInput = popupTypeNewCard.querySelector('.popup__input_type_url');
+
 
 function createCard(cardData) {
   const cardTemplate = document.querySelector('#card-template').content;
@@ -58,3 +62,14 @@ function handlePopupTypeEditSubmit(evt) {
 }
 
 popupTypeEdit.addEventListener('submit', handlePopupTypeEditSubmit);
+
+function handlePopupTypeNewCard(evt) {
+  evt.preventDefault();
+  initialCards.unshift({name: placeNameInput.value, link: linkInput.value, alt: ''});
+  const card = createCard(initialCards[0]);
+  cardsContainer.prepend(card);
+  addImageForm.reset();
+  closeModal(popupTypeNewCard);
+}
+
+popupTypeNewCard.addEventListener('submit', handlePopupTypeNewCard);
