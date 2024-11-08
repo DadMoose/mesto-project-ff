@@ -17,22 +17,25 @@ const placeNameInput = popupTypeNewCard.querySelector('.popup__input_type_card-n
 const linkInput = popupTypeNewCard.querySelector('.popup__input_type_url');
 
 
-function createCard(cardData) {
+function createCard(cardData, handleLikeClick, handleImageClick) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const buttonDelete = cardElement.querySelector('.card__delete-button');
   const cardImage = cardElement.querySelector('.card__image');
+  const buttonLike = cardElement.querySelector('.card__like-button');
 
   cardElement.querySelector('.card__title').textContent = cardData.name;
   cardImage.src = cardData.link;
   cardImage.alt = cardData.alt;
   buttonDelete.addEventListener('click', () => deleteCard(cardElement));
+  buttonLike.addEventListener('click', () => handleLikeClick(buttonLike));
+  cardImage.addEventListener('click', () => handleImageClick(cardData));
 
   return cardElement;
 }
 
 function addCard(cardData) {
-  const card = createCard(cardData);
+  const card = createCard(cardData, likeCard, popupImageView);
   cardsContainer.append(card);
 }
 
@@ -73,3 +76,17 @@ function handlePopupTypeNewCard(evt) {
 }
 
 popupTypeNewCard.addEventListener('submit', handlePopupTypeNewCard);
+
+function likeCard(evt) {
+  evt.classList.toggle('card__like-button_is-active');
+}
+
+function popupImageView(image) {
+  popupTypeImage.style.backgroundColor = 'rgba(0, 0, 0, .9)';
+  const popupImage = popupTypeImage.querySelector('.popup__image');
+  const popupCaption = popupTypeImage.querySelector('.popup__caption');
+
+  popupImage.src = image.link;
+  popupImage.alt = image.alt;
+  popupCaption.textContent = image.name;
+}
