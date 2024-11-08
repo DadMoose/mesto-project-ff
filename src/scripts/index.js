@@ -1,5 +1,6 @@
-import {openModal, closeModal, handleCrossClick, handleEscKeyUp} from './components/modal'
-import {initialCards, createCard, deleteCard, likeCard} from './components/cards';
+import {openModal, closeModal, initCloseClick, handleEscKeyUp} from './components/modal';
+import {initialCards} from './components/cards';
+import {createCard, deleteCard, likeCard} from './components/card';
 import '../pages/index.css';
 
 const content = document.querySelector('.content');
@@ -19,7 +20,7 @@ const buttonAdd = content.querySelector('.profile__add-button');
 
 
 function addCard(cardData) {
-  const card = createCard(cardData, likeCard, popupImageView);
+  const card = createCard(cardData, deleteCard, likeCard, popupImageView);
   cardsContainer.append(card);
 }
 
@@ -30,7 +31,7 @@ function handlePopupTypeEditSubmit(evt) {
   closeModal(popupTypeEdit);
 }
 
-function handlePopupTypeNewCard(evt) {
+function handlePopupTypeNewCardSubmit(evt) {
   evt.preventDefault();
   initialCards.unshift({name: placeNameInput.value, link: linkInput.value, alt: ''});
   const card = createCard(initialCards[0]);
@@ -39,14 +40,13 @@ function handlePopupTypeNewCard(evt) {
   closeModal(popupTypeNewCard);
 }
 
-function popupImageView(image) {
-  popupTypeImage.style.backgroundColor = 'rgba(0, 0, 0, .9)';
+function popupImageView(cardData) {
   const popupImage = popupTypeImage.querySelector('.popup__image');
   const popupCaption = popupTypeImage.querySelector('.popup__caption');
 
-  popupImage.src = image.link;
-  popupImage.alt = image.alt;
-  popupCaption.textContent = image.name;
+  popupImage.src = cardData.link;
+  popupImage.alt = cardData.alt;
+  popupCaption.textContent = cardData.name;
 }
 
 initialCards.forEach(addCard);
@@ -67,5 +67,5 @@ cardsContainer.addEventListener('click', function (evt) {
 
 popupTypeEdit.addEventListener('submit', handlePopupTypeEditSubmit);
 
-popupTypeNewCard.addEventListener('submit', handlePopupTypeNewCard);
+popupTypeNewCard.addEventListener('submit', handlePopupTypeNewCardSubmit);
 

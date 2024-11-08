@@ -1,6 +1,6 @@
 export function openModal(evt) {
     evt.classList.add('popup_is-opened');
-    handleCloseClick(evt);
+    initCloseClick(evt);
     window.addEventListener('keypress', handleEscKeyUp);
 }
 
@@ -9,11 +9,9 @@ export function closeModal(modal) {
     window.removeEventListener('keypress', handleEscKeyUp);
 }
 
-export function handleCloseClick (popup) {
+export function initCloseClick (popup) {
     const cross = popup.querySelector('.popup__close');
-    cross.addEventListener("click", function() {
-        closeModal(popup);
-    });
+    cross.addEventListener("click", () => closeModal(popup));
 
     popup.addEventListener("click", (event) => {
         if (event.target.classList.contains('popup_is-opened')) {
