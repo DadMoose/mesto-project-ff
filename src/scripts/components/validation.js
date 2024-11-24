@@ -18,7 +18,7 @@ function hideInputError(formElement, inputElement, config) {
    const namePattern = /^[a-zA-Zа-яА-ЯёË\s\-]+$/;
    const customMessage = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы";
 
-   if(!namePattern.test(inputElement.value) && inputElement.id === 'name-input' && inputElement.value) {
+   if(!namePattern.test(inputElement.value) && (inputElement.id === 'name-input' || inputElement.id === 'place-name-input') && inputElement.value) {
      inputElement.setCustomValidity(customMessage);
    } else {
      inputElement.setCustomValidity('');
