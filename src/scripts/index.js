@@ -1,6 +1,7 @@
-import {openModal, closeModal, initCloseClick, handleEscKeyUp} from './components/modal';
-import {initialCards} from './components/cards';
-import {createCard, deleteCard, likeCard} from './components/card';
+import {openModal, closeModal} from './components/modal.js';
+import {initialCards} from './components/cards.js';
+import {createCard, deleteCard, likeCard} from './components/card.js';
+import {enableValidation, clearValidation} from "./components/validation.js";
 import '../pages/index.css';
 
 const content = document.querySelector('.content');
@@ -12,7 +13,6 @@ const nameInput = popupTypeEdit.querySelector('.popup__input_type_name');
 const jobInput = popupTypeEdit.querySelector('.popup__input_type_description');
 const profileTitle = content.querySelector('.profile__title');
 const profileDescription = content.querySelector('.profile__description');
-const addImageForm = popupTypeNewCard.querySelector('.popup__form');
 const placeNameInput = popupTypeNewCard.querySelector('.popup__input_type_card-name');
 const linkInput = popupTypeNewCard.querySelector('.popup__input_type_url');
 const buttonEdit = content.querySelector('.profile__edit-button');
@@ -36,7 +36,7 @@ function handlePopupTypeNewCardSubmit(evt) {
   initialCards.unshift({name: placeNameInput.value, link: linkInput.value, alt: ''});
   const card = createCard(initialCards[0]);
   cardsContainer.prepend(card);
-  addImageForm.reset();
+  clearValidation(popupTypeNewCard, validationConfig);
   closeModal(popupTypeNewCard);
 }
 
@@ -55,6 +55,7 @@ buttonEdit.addEventListener('click', function() {
   openModal(popupTypeEdit);
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
+  clearValidation(popupTypeEdit, validationConfig);
 })
 
 buttonAdd.addEventListener('click', () => openModal(popupTypeNewCard));
@@ -68,4 +69,23 @@ cardsContainer.addEventListener('click', function (evt) {
 popupTypeEdit.addEventListener('submit', handlePopupTypeEditSubmit);
 
 popupTypeNewCard.addEventListener('submit', handlePopupTypeNewCardSubmit);
+
+// обработка ошибок ввода
+
+const validationConfig =
+  {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__input-error_active',
+  };
+
+enableValidation(validationConfig);
+
+clearValidation(popupTypeEdit, validationConfig);
+
+
+
 
