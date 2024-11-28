@@ -1,7 +1,9 @@
+import {apiToken} from '../../../env'
+
 const config = {
   baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-27',
   headers: {
-    authorization: '2069e1e7-1fc1-4853-b683-9a0d07c1d4f9',
+    authorization: apiToken,
     'Content-Type': 'application/json'
   }
 }
