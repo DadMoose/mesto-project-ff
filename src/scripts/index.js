@@ -1,7 +1,7 @@
 import {openModal, closeModal} from './components/modal.js';
 import {createCard, deleteCard, likeCard} from './components/card.js';
 import {enableValidation, clearValidation} from "./components/validation.js";
-import {addNewCard, loadCard, loadProfile, updateProfile} from "./components/api.js";
+import {addNewCard, loadProfileAndCard, updateProfile} from "./components/api.js";
 import '../pages/index.css';
 
 const content = document.querySelector('.content');
@@ -19,9 +19,8 @@ const linkInput = popupTypeNewCard.querySelector('.popup__input_type_url');
 const buttonEdit = content.querySelector('.profile__edit-button');
 const buttonAdd = content.querySelector('.profile__add-button');
 
-
-function addCard(cardData) {
-  const card = createCard(cardData, deleteCard, likeCard, popupImageView);
+function addCard(cardData, profileDataID) {
+  const card = createCard(cardData, profileDataID, deleteCard, likeCard, popupImageView);
   cardsContainer.append(card);
 }
 
@@ -47,16 +46,10 @@ function handlePopupTypeNewCardSubmit(evt) {
   addNewCard(placeNameInput.value, linkInput.value)
     .then(data => {
       if(data) {
-        const card = createCard({
-          name: data.name,
-          link: data.link,
-          alt: data.name,
-          likes: data.likes,
-        }, deleteCard, likeCard, popupImageView);
+        const profileID = data.owner._id;
+        const card = createCard(data, profileID, deleteCard, likeCard, popupImageView);
 
         cardsContainer.prepend(card);
-
-        console.log('Карточка добавлена успешно');
       }
     })
     .catch(err => {
@@ -78,8 +71,6 @@ function popupImageView(cardData) {
 
 buttonEdit.addEventListener('click', function() {
   openModal(popupTypeEdit);
-  nameInput.value = profileTitle.textContent;
-  jobInput.value = profileDescription.textContent;
   clearValidation(popupTypeEdit, validationConfig);
 })
 
@@ -107,6 +98,4 @@ const validationConfig =
 
 enableValidation(validationConfig);
 
-loadProfile(profileTitle, profileDescription, profileImage);
-
-loadCard(addCard);
+loadProfileAndCard(profileTitle, profileDescription, profileImage, addCard);

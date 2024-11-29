@@ -16,7 +16,7 @@ export const getInitialCards = () => {
       if (res.ok) {
         return res.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка при загрузке карточек: ${res.status}`);
     })
     .catch(err => console.log(err));
 }
@@ -29,38 +29,27 @@ const getProfileInfo = () => {
       if (res.ok) {
         return res.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка при загрузке профиля: ${res.status}`);
     })
     .catch(err => console.log(err));
 }
 
-export function loadProfile(title, description, image) {
-  getProfileInfo()
-    .then(data => {
-      if(data) {
-        title.textContent = data.name;
-        description.textContent = data.about;
-        image.style.backgroundImage = `url('${data.avatar}')`;
-        console.log('Профиль успешно загружен');
+export function loadProfileAndCard(title, description, image, add) {
+  Promise.all([getProfileInfo(), getInitialCards()])
+    .then(([profileData, cards]) => {
+      if(profileData) {
+        title.textContent = profileData.name;
+        description.textContent = profileData.about;
+        image.style.backgroundImage = `url('${profileData.avatar}')`;
       }
-    })
-    .catch(err => {
-      console.log(`Не удалось загрузить профиль: ${err}`);
-      description.textContent = `Не удалось загрузить профиль: ${err}`;
-    });
-}
-
-export function loadCard(add) {
-  getInitialCards()
-    .then(cards => {
       if(cards) {
-        cards.forEach(add);
-        console.log('Карточки успешно загружены');
+        cards.forEach((card) => {
+          add(card, profileData._id);
+        });
       }
     })
-    .catch(err => {
-      console.log(`Не удалось загрузить карточки: ${err}`);
-    });
+
+    .catch(err => {console.log(`Произошла ошибка при загрузке данных: ${err}`);})
 }
 
 export function updateProfile(name, description) {
@@ -76,7 +65,7 @@ export function updateProfile(name, description) {
       if (res.ok) {
         return res.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка при обновлении профиля: ${res.status}`);
     })
     .catch(err => console.log(err));
 }
@@ -95,13 +84,22 @@ export function addNewCard(name, link) {
       if (res.ok) {
         return res.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return Promise.reject(`Ошибка при добавлении карточки: ${res.status}`);
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log(`Карточка не была добавлена: ${err}`));
 }
 
+export function deleteCardAPI(cardID) {
+  return fetch(`${config.baseUrl}/cards/${cardID}`, {
+    method: 'DELETE',
+    headers: config.headers
+  })
+}
 
-
-
-
+export function toggleLike(cardID, method) {
+  return fetch(`${config.baseUrl}/cards/likes/${cardID}`, {
+    method: `${method}`,
+    headers: config.headers
+  })
+}
 
