@@ -103,3 +103,18 @@ export function toggleLike(cardID, method) {
   })
 }
 
+export function updateAvatar(link) {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar: `${link}`,
+    })
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка при обновлении аватара: ${res.status}`);
+    })
+}

@@ -1,7 +1,7 @@
 import {openModal, closeModal} from './components/modal.js';
 import {createCard, deleteCard, likeCard} from './components/card.js';
 import {enableValidation, clearValidation} from "./components/validation.js";
-import {addNewCard, loadProfileAndCard, updateProfile} from "./components/api.js";
+import {addNewCard, loadProfileAndCard, updateAvatar, updateProfile} from "./components/api.js";
 import '../pages/index.css';
 
 const content = document.querySelector('.content');
@@ -12,6 +12,9 @@ const cardsContainer = content.querySelector('.places__list');
 const popupTypeEdit = document.querySelector('.popup_type_edit');
 const popupTypeNewCard = document.querySelector('.popup_type_new-card');
 const popupTypeImage = document.querySelector('.popup_type_image');
+const popupTypeEditAvatar = document.querySelector('.popup_type_edit-avatar');
+const avatarLinkInput = popupTypeEditAvatar.querySelector('.popup__input_type_url');
+const buttonEditAvatar = content.querySelector('.profile__avatar-edit-button');
 const nameInput = popupTypeEdit.querySelector('.popup__input_type_name');
 const jobInput = popupTypeEdit.querySelector('.popup__input_type_description');
 const placeNameInput = popupTypeNewCard.querySelector('.popup__input_type_card-name');
@@ -60,6 +63,29 @@ function handlePopupTypeNewCardSubmit(evt) {
   closeModal(popupTypeNewCard);
 }
 
+function handlePopupTypeEditAvatarSubmit(evt) {
+  evt.preventDefault();
+  const buttonSubmit = popupTypeEditAvatar.querySelector('.popup__button');
+  buttonSubmit.textContent = 'Cохранение...';
+
+  updateAvatar(avatarLinkInput.value)
+    .then((profileData) => {
+      if (profileData) {
+        profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
+      }
+    })
+    .then(() =>{
+      clearValidation(popupTypeEditAvatar, validationConfig);
+      closeModal(popupTypeEditAvatar);
+    })
+    .catch((err) => {console.log(`Аватар не был обновлён: ${err}`)})
+    .finally(() => {
+      buttonSubmit.textContent = 'Сохранить';
+    })
+
+
+}
+
 function popupImageView(cardData) {
   const popupImage = popupTypeImage.querySelector('.popup__image');
   const popupCaption = popupTypeImage.querySelector('.popup__caption');
@@ -76,6 +102,8 @@ buttonEdit.addEventListener('click', function() {
 
 buttonAdd.addEventListener('click', () => openModal(popupTypeNewCard));
 
+buttonEditAvatar.addEventListener('click', () => openModal(popupTypeEditAvatar));
+
 cardsContainer.addEventListener('click', function (evt) {
   if (evt.target.classList.contains('card__image')) {
     openModal(popupTypeImage);
@@ -85,6 +113,8 @@ cardsContainer.addEventListener('click', function (evt) {
 popupTypeEdit.addEventListener('submit', handlePopupTypeEditSubmit);
 
 popupTypeNewCard.addEventListener('submit', handlePopupTypeNewCardSubmit);
+
+popupTypeEditAvatar.addEventListener('submit', handlePopupTypeEditAvatarSubmit);
 
 const validationConfig =
   {
