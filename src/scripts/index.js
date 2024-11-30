@@ -29,38 +29,51 @@ function addCard(cardData, profileDataID) {
 
 function handlePopupTypeEditSubmit(evt) {
   evt.preventDefault();
+
+  const buttonSubmit = popupTypeEdit.querySelector('.popup__button');
+  buttonSubmit.textContent = 'Сохранение...';
+
   updateProfile(nameInput.value, jobInput.value)
-    .then(data => {
-      if(data) {
-        profileTitle.textContent = data.name;
-        profileDescription.textContent = data.about;
-        console.log('Данные профиля успешно обновлены');
-      }
-    })
-    .catch(err => {
-      console.log(`Не удалось обновить данные профиля: ${err}`);
-    });
-  closeModal(popupTypeEdit);
+  .then(data => {
+    if (data) {
+      profileTitle.textContent = data.name;
+      profileDescription.textContent = data.about;
+
+      closeModal(popupTypeEdit);
+    }
+  })
+  .then(() => {
+    clearValidation(popupTypeEdit, validationConfig);
+    closeModal(popupTypeEdit);
+  })
+  .finally(() => {
+    buttonSubmit.textContent = 'Сохранить';
+  })
 }
 
 
 function handlePopupTypeNewCardSubmit(evt) {
   evt.preventDefault();
+
+  const buttonSubmit = popupTypeNewCard.querySelector('.popup__button');
+  buttonSubmit.textContent = 'Сохранение...';
+
   addNewCard(placeNameInput.value, linkInput.value)
-    .then(data => {
-      if(data) {
-        const profileID = data.owner._id;
-        const card = createCard(data, profileID, deleteCard, likeCard, popupImageView);
+  .then(data => {
+    if (data) {
+      const profileID = data.owner._id;
+      const card = createCard(data, profileID, deleteCard, likeCard, popupImageView);
 
-        cardsContainer.prepend(card);
-      }
-    })
-    .catch(err => {
-      console.log(`Не удалось добавить карточку: ${err}`);
-    });
-
-  clearValidation(popupTypeNewCard, validationConfig);
-  closeModal(popupTypeNewCard);
+      cardsContainer.prepend(card);
+    }
+  })
+  .then(() => {
+    clearValidation(popupTypeNewCard, validationConfig);
+    closeModal(popupTypeNewCard);
+  })
+  .finally(() => {
+    buttonSubmit.textContent = 'Сохранить';
+  })
 }
 
 function handlePopupTypeEditAvatarSubmit(evt) {
@@ -69,21 +82,18 @@ function handlePopupTypeEditAvatarSubmit(evt) {
   buttonSubmit.textContent = 'Cохранение...';
 
   updateAvatar(avatarLinkInput.value)
-    .then((profileData) => {
-      if (profileData) {
-        profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
-      }
-    })
-    .then(() =>{
-      clearValidation(popupTypeEditAvatar, validationConfig);
-      closeModal(popupTypeEditAvatar);
-    })
-    .catch((err) => {console.log(`Аватар не был обновлён: ${err}`)})
-    .finally(() => {
-      buttonSubmit.textContent = 'Сохранить';
-    })
-
-
+  .then((profileData) => {
+    if (profileData) {
+      profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
+    }
+  })
+  .then(() => {
+    clearValidation(popupTypeEditAvatar, validationConfig);
+    closeModal(popupTypeEditAvatar);
+  })
+  .finally(() => {
+    buttonSubmit.textContent = 'Сохранить';
+  })
 }
 
 function popupImageView(cardData) {
@@ -95,10 +105,7 @@ function popupImageView(cardData) {
   popupCaption.textContent = cardData.name;
 }
 
-buttonEdit.addEventListener('click', function() {
-  openModal(popupTypeEdit);
-  clearValidation(popupTypeEdit, validationConfig);
-})
+buttonEdit.addEventListener('click', () => openModal(popupTypeEdit));
 
 buttonAdd.addEventListener('click', () => openModal(popupTypeNewCard));
 
