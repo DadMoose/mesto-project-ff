@@ -34,14 +34,14 @@ export function createCard(cardData, profileDataID, deleteCard, handleLikeClick,
 
 export function deleteCard(card) {
   return deleteCardAPI(card.id)
-    .then((res) => {
-      if (res.ok) {
-        return card.remove();
-      }
-      return Promise.reject(`Ошибка при удалении карточки: статус ${res.status}`);
+  .then((res) => {
+    if (res.ok) {
+      return card.remove();
+    }
+    return Promise.reject(`Ошибка при удалении карточки: статус ${res.status}`);
 
-    })
-    .catch(err => console.error(`Ошибка при выполнении операции: ${err}`));
+  })
+  .catch(err => console.error(`Ошибка при выполнении операции: ${err}`));
 }
 
 export function likeCard(button, cardData, profileDataID, likeCounter) {
@@ -49,23 +49,25 @@ export function likeCard(button, cardData, profileDataID, likeCounter) {
   const method = isLiked ? 'DELETE' : 'PUT';
 
   toggleLike(cardData._id, method)
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка при загрузке лайков: ${res.status}`);
-    })
-    .then(updatedCard => {
-      cardData.likes = updatedCard.likes;
-      likeCounter.textContent = cardData.likes.length;
+  .then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка при загрузке лайков: ${res.status}`);
+  })
+  .then(updatedCard => {
+    cardData.likes = updatedCard.likes;
+    likeCounter.textContent = cardData.likes.length;
 
-      if (isLiked) {
-        button.classList.remove('card__like-button_is-active');
-      } else {
-        button.classList.add('card__like-button_is-active');
-      }
-    })
-    .catch((err) => {`Не удалось поставить лайк: ${err}`})
+    if (isLiked) {
+      button.classList.remove('card__like-button_is-active');
+    } else {
+      button.classList.add('card__like-button_is-active');
+    }
+  })
+  .catch((err) => {
+    `Не удалось поставить лайк: ${err}`
+  })
 }
 
 function isCardLiked(card, userID) {

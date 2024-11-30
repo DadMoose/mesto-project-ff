@@ -1,40 +1,37 @@
-import {apiToken} from '../../env'
+// import {apiToken} from '../../../env'
 
 const config = {
   baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-27',
   headers: {
-    authorization: apiToken,
+    authorization: '2069e1e7-1fc1-4853-b683-9a0d07c1d4f9',
     'Content-Type': 'application/json'
   }
 }
 
-export const getInitialCards = () => {
+const checkResponse = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+}
+
+const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка при загрузке карточек: ${res.status}`);
-  })
-  .catch(err => console.log(err));
+  .then(checkResponse)
+  .catch(err => console.log(`Ошибка при загрузке карточек: ${err}`));
 }
 
 const getProfileInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка при загрузке профиля: ${res.status}`);
-  })
-  .catch(err => console.log(err));
+  .then(checkResponse)
+  .catch(err => console.log(`Ошибка при загрузке профиля: ${err}`));
 }
 
-export function loadProfileAndCard(title, description, image, add) {
+export const loadProfileAndCard = (title, description, image, add) => {
   Promise.all([getProfileInfo(), getInitialCards()])
   .then(([profileData, cards]) => {
     if (profileData) {
@@ -54,7 +51,7 @@ export function loadProfileAndCard(title, description, image, add) {
   })
 }
 
-export function updateProfile(name, description) {
+export const updateProfile = (name, description) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
@@ -63,18 +60,13 @@ export function updateProfile(name, description) {
       about: `${description}`,
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка при обновлении профиля: ${res.status}`);
-  })
+  .then(checkResponse)
   .catch(err => {
-    console.log(`Не удалось обновить данные профиля: ${err}`);
+    console.log(`Ошибка при обновлении профиля: ${err}`);
   })
 }
 
-export function addNewCard(name, link) {
+export const addNewCard = (name, link) => {
   return fetch(`${config.baseUrl}/cards`, {
     method: 'POST',
     headers: config.headers,
@@ -84,30 +76,25 @@ export function addNewCard(name, link) {
       alt: `${name}`,
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка при добавлении карточки: ${res.status}`);
-  })
-  .catch(err => console.log(`Карточка не была добавлена: ${err}`));
+  .then(checkResponse)
+  .catch(err => console.log(`Ошибка при добавлении карточки: ${err}`));
 }
 
-export function deleteCardAPI(cardID) {
+export const deleteCardAPI = (cardID) => {
   return fetch(`${config.baseUrl}/cards/${cardID}`, {
     method: 'DELETE',
     headers: config.headers
   })
 }
 
-export function toggleLike(cardID, method) {
+export const toggleLike = (cardID, method) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardID}`, {
     method: `${method}`,
     headers: config.headers
   })
 }
 
-export function updateAvatar(link) {
+export const updateAvatar = (link) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     headers: config.headers,
@@ -115,13 +102,8 @@ export function updateAvatar(link) {
       avatar: `${link}`,
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка при обновлении аватара: ${res.status}`);
-  })
+  .then(checkResponse)
   .catch((err) => {
-    console.log(`Аватар не был обновлён: ${err}`)
+    console.log(`Ошибка при обновлении аватара: ${err}`)
   })
 }
