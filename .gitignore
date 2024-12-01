@@ -1,4 +1,4 @@
 node_modules
 dist
 env.js
-./src/scripts/components/cards.js
+src/scripts/components/cards.js
