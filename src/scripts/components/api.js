@@ -19,35 +19,20 @@ const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-  .then(checkResponse)
-  .catch(err => console.log(`Ошибка при загрузке карточек: ${err}`));
+  .then(checkResponse);
 }
 
 const getProfileInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-  .then(checkResponse)
-  .catch(err => console.log(`Ошибка при загрузке профиля: ${err}`));
+  .then(checkResponse);
 }
 
-export const loadProfileAndCard = (title, description, image, add) => {
-  Promise.all([getProfileInfo(), getInitialCards()])
+export const getProfileAndCards = () => {
+  return Promise.all([getProfileInfo(), getInitialCards()])
   .then(([profileData, cards]) => {
-    if (profileData) {
-      title.textContent = profileData.name;
-      description.textContent = profileData.about;
-      image.style.backgroundImage = `url('${profileData.avatar}')`;
-    }
-    if (cards) {
-      cards.forEach((card) => {
-        add(card, profileData._id);
-      });
-    }
-  })
-
-  .catch(err => {
-    console.log(`Произошла ошибка при загрузке данных: ${err}`);
+    return {profileData, cards};
   })
 }
 
@@ -60,10 +45,7 @@ export const updateProfile = (name, description) => {
       about: `${description}`,
     })
   })
-  .then(checkResponse)
-  .catch(err => {
-    console.log(`Ошибка при обновлении профиля: ${err}`);
-  })
+  .then(checkResponse);
 }
 
 export const addNewCard = (name, link) => {
@@ -73,11 +55,9 @@ export const addNewCard = (name, link) => {
     body: JSON.stringify({
       name: `${name}`,
       link: `${link}`,
-      alt: `${name}`,
     })
   })
-  .then(checkResponse)
-  .catch(err => console.log(`Ошибка при добавлении карточки: ${err}`));
+  .then(checkResponse);
 }
 
 export const deleteCardAPI = (cardID) => {
@@ -102,8 +82,5 @@ export const updateAvatar = (link) => {
       avatar: `${link}`,
     })
   })
-  .then(checkResponse)
-  .catch((err) => {
-    console.log(`Ошибка при обновлении аватара: ${err}`)
-  })
+  .then(checkResponse);
 }

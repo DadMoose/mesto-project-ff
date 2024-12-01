@@ -1,7 +1,7 @@
 import {openModal, closeModal} from './components/modal.js';
 import {createCard, deleteCard, likeCard} from './components/card.js';
 import {enableValidation, clearValidation} from "./components/validation.js";
-import {addNewCard, loadProfileAndCard, updateAvatar, updateProfile} from "./components/api.js";
+import {addNewCard, getProfileAndCards, updateAvatar, updateProfile} from "./components/api.js";
 import '../pages/index.css';
 
 const content = document.querySelector('.content');
@@ -46,9 +46,10 @@ function handlePopupTypeEditSubmit(evt) {
     clearValidation(popupTypeEdit, validationConfig);
     closeModal(popupTypeEdit);
   })
+  .catch(err => console.log(`Ошибка при обновлении профиля: ${err}`))
   .finally(() => {
     buttonSubmit.textContent = 'Сохранить';
-  })
+  });
 }
 
 
@@ -71,9 +72,10 @@ function handlePopupTypeNewCardSubmit(evt) {
     clearValidation(popupTypeNewCard, validationConfig);
     closeModal(popupTypeNewCard);
   })
+  .catch(err => console.log(`Ошибка при добавлении карточки: ${err}`))
   .finally(() => {
     buttonSubmit.textContent = 'Сохранить';
-  })
+  });
 }
 
 function handlePopupTypeEditAvatarSubmit(evt) {
@@ -91,6 +93,7 @@ function handlePopupTypeEditAvatarSubmit(evt) {
     clearValidation(popupTypeEditAvatar, validationConfig);
     closeModal(popupTypeEditAvatar);
   })
+  .catch(err => console.log(`Ошибка при обновлении аватара: ${err}`))
   .finally(() => {
     buttonSubmit.textContent = 'Сохранить';
   })
@@ -135,4 +138,23 @@ const validationConfig =
 
 enableValidation(validationConfig);
 
-loadProfileAndCard(profileTitle, profileDescription, profileImage, addCard);
+function loadProfileAndCards() {
+  getProfileAndCards()
+  .then(({profileData, cards}) => {
+    if (profileData) {
+      profileTitle.textContent = profileData.name;
+      profileDescription.textContent = profileData.about;
+      profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
+    }
+    if (cards) {
+      cards.forEach((card) => {
+        addCard(card, profileData._id);
+      });
+    }
+  })
+  .catch(err => {
+    console.log(`Произошла ошибка при загрузке данных: ${err}`);
+  });
+}
+
+loadProfileAndCards();

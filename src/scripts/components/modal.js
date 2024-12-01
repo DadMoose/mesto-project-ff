@@ -1,7 +1,7 @@
-export function openModal(evt) {
-    evt.classList.add('popup_is-opened');
-    initCloseClick(evt);
-    window.addEventListener('keypress', handleEscKeyUp);
+export function openModal(popup) {
+    popup.classList.add('popup_is-opened');
+    initCloseClick(popup);
+    document.addEventListener('keypress', handleEscKeyUp);
 }
 
 export function closeModal(modal) {
