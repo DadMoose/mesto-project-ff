@@ -1,4 +1,4 @@
-import {openModal, closeModal} from './components/modal.js';
+import {openModal, closeModal, initCloseClick} from './components/modal.js';
 import {createCard, deleteCard, likeCard} from './components/card.js';
 import {enableValidation, clearValidation} from "./components/validation.js";
 import {addNewCard, getProfileAndCards, updateAvatar, updateProfile} from "./components/api.js";
@@ -21,6 +21,7 @@ const placeNameInput = popupTypeNewCard.querySelector('.popup__input_type_card-n
 const linkInput = popupTypeNewCard.querySelector('.popup__input_type_url');
 const buttonEdit = content.querySelector('.profile__edit-button');
 const buttonAdd = content.querySelector('.profile__add-button');
+const documentPopups = document.querySelectorAll('.popup');
 
 function addCard(cardData, profileDataID) {
   const card = createCard(cardData, profileDataID, deleteCard, likeCard, popupImageView);
@@ -119,6 +120,8 @@ cardsContainer.addEventListener('click', function (evt) {
     openModal(popupTypeImage);
   }
 });
+
+initCloseClick(documentPopups);
 
 popupTypeEdit.addEventListener('submit', handlePopupTypeEditSubmit);
 

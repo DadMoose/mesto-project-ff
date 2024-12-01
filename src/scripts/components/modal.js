@@ -1,28 +1,29 @@
 export function openModal(popup) {
     popup.classList.add('popup_is-opened');
-    initCloseClick(popup);
-    document.addEventListener('keypress', handleEscKeyUp);
+    document.addEventListener('keydown', handleEscKeyUp);
 }
 
 export function closeModal(modal) {
     modal.classList.remove('popup_is-opened')
-    window.removeEventListener('keypress', handleEscKeyUp);
+    document.removeEventListener('keydown', handleEscKeyUp);
 }
 
-export function initCloseClick (popup) {
-    const cross = popup.querySelector('.popup__close');
-    cross.addEventListener("click", () => closeModal(popup));
+export function initCloseClick(popups) {
+    popups.forEach((popup) => {
+        const cross = popup.querySelector('.popup__close');
 
-    popup.addEventListener("click", (event) => {
-        if (event.target.classList.contains('popup_is-opened')) {
-            closeModal(popup);
-        }
+        cross.addEventListener("click", () => closeModal(popup));
+        popup.addEventListener("click", (event) => {
+            if (event.target.classList.contains('popup_is-opened')) {
+                closeModal(popup);
+            }
+        });
     });
 }
 
 export function handleEscKeyUp(evt) {
     if (evt.key === "Escape") {
-        const popup = document.querySelector(".popup_is-opened");
+        const popup = document.querySelector('.popup_is-opened');
         closeModal(popup);
     }
 }
