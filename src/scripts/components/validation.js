@@ -15,14 +15,9 @@ function hideInputError(formElement, inputElement, config) {
 }
 
 function checkInputValidity(formElement, inputElement, config) {
- const namePattern = /^[a-zA-Zа-яА-ЯёË\s\-]+$/;
- const customMessage = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы";
+ const customMessage = inputElement.getAttribute('data-error-message');
 
- if(!namePattern.test(inputElement.value) &&
-   (inputElement.id === 'name-input' ||
-     inputElement.id === 'place-name-input' ||
-     inputElement.id === 'description-input') &&
-   inputElement.value) {
+ if (inputElement.validity.patternMismatch && inputElement) {
    inputElement.setCustomValidity(customMessage);
  } else {
    inputElement.setCustomValidity('');
@@ -75,13 +70,9 @@ export function enableValidation(config) {
 
 export function clearValidation(formElement, config) {
  const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
- const buttonElement = formElement.querySelector(config.submitButtonSelector);
 
  inputList.forEach((inputElement) => {
    hideInputError(formElement, inputElement, config);
    inputElement.value = '';
  })
-
- buttonElement.classList.add(config.inactiveButtonClass);
- buttonElement.disabled = true;
 }
