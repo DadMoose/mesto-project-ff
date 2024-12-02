@@ -100,13 +100,13 @@ function handlePopupTypeEditAvatarSubmit(evt) {
   })
 }
 
-function popupImageView(cardData) {
+function popupImageView(cardImage, cardTitle) {
   const popupImage = popupTypeImage.querySelector('.popup__image');
   const popupCaption = popupTypeImage.querySelector('.popup__caption');
 
-  popupImage.src = cardData.link;
-  popupImage.alt = cardData.alt;
-  popupCaption.textContent = cardData.name;
+  popupImage.src = cardImage.src;
+  popupImage.alt = cardTitle.textContent;
+  popupCaption.textContent = cardTitle.textContent;
 }
 
 buttonEdit.addEventListener('click', () => openModal(popupTypeEdit));

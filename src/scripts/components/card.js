@@ -8,17 +8,17 @@ export function createCard(cardData, profileDataID, deleteCard, handleLikeClick,
   const cardTitle = cardElement.querySelector('.card__title');
   const buttonLike = cardElement.querySelector('.card__like-button');
   const likeCount = cardElement.querySelector('.card__like-count');
+  const cardElementID = cardData._id;
 
-  cardElement.id = cardData._id;
   cardTitle.textContent = cardData.name;
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
   likeCount.textContent = cardData.likes.length;
   buttonLike.addEventListener('click', () => handleLikeClick(buttonLike, cardData, profileDataID, likeCount));
-  cardImage.addEventListener('click', () => handleImageClick(cardData));
+  cardImage.addEventListener('click', () => handleImageClick(cardImage, cardTitle));
 
   if (cardData.owner._id === profileDataID) {
-    buttonDelete.addEventListener('click', () => deleteCard(cardElement));
+    buttonDelete.addEventListener('click', () => deleteCard(cardElement, cardElementID));
   } else {
     buttonDelete.remove();
   }
@@ -32,10 +32,10 @@ export function createCard(cardData, profileDataID, deleteCard, handleLikeClick,
   return cardElement;
 }
 
-export function deleteCard(card) {
-  return deleteCardAPI(card.id)
+export function deleteCard(card, cardID) {
+  deleteCardAPI(cardID)
   .then((res) => {
-    if (res.ok) {
+    if (res) {
       return card.remove();
     }
     return Promise.reject(`Ошибка при удалении карточки: статус ${res.status}`);
@@ -46,15 +46,8 @@ export function deleteCard(card) {
 
 export function likeCard(button, cardData, profileDataID, likeCounter) {
   const isLiked = isCardLiked(cardData, profileDataID);
-  const method = isLiked ? 'DELETE' : 'PUT';
 
-  toggleLike(cardData._id, method)
-  .then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка при загрузке лайков: ${res.status}`);
-  })
+  toggleLike(cardData._id, isLiked)
   .then(updatedCard => {
     cardData.likes = updatedCard.likes;
     likeCounter.textContent = cardData.likes.length;

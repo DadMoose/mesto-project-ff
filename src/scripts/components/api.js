@@ -67,11 +67,14 @@ export const deleteCardAPI = (cardID) => {
   })
 }
 
-export const toggleLike = (cardID, method) => {
+export const toggleLike = (cardID, isLiked) => {
+  const method = isLiked ? 'DELETE' : 'PUT';
+
   return fetch(`${config.baseUrl}/cards/likes/${cardID}`, {
     method: `${method}`,
     headers: config.headers
   })
+  .then(checkResponse);
 }
 
 export const updateAvatar = (link) => {
