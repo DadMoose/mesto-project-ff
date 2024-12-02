@@ -1,6 +1,6 @@
 import {openModal, closeModal, initCloseClick} from './components/modal.js';
 import {createCard, deleteCard, likeCard} from './components/card.js';
-import {enableValidation, clearValidation} from "./components/validation.js";
+import {enableValidation, clearValidation, toggleButtonState} from "./components/validation.js";
 import {addNewCard, getProfileAndCards, updateAvatar, updateProfile} from "./components/api.js";
 import '../pages/index.css';
 
@@ -22,6 +22,8 @@ const linkInput = popupTypeNewCard.querySelector('.popup__input_type_url');
 const buttonEdit = content.querySelector('.profile__edit-button');
 const buttonAdd = content.querySelector('.profile__add-button');
 const documentPopups = document.querySelectorAll('.popup');
+const popupTypeImageImage = popupTypeImage.querySelector('.popup__image');
+const popupTypeImageCaption = popupTypeImage.querySelector('.popup__caption');
 
 function addCard(cardData, profileDataID) {
   const card = createCard(cardData, profileDataID, deleteCard, likeCard, popupImageView);
@@ -31,7 +33,7 @@ function addCard(cardData, profileDataID) {
 function handlePopupTypeEditSubmit(evt) {
   evt.preventDefault();
 
-  const buttonSubmit = popupTypeEdit.querySelector('.popup__button');
+  const buttonSubmit = evt.submitter;
   buttonSubmit.textContent = 'Сохранение...';
 
   updateProfile(nameInput.value, jobInput.value)
@@ -39,12 +41,7 @@ function handlePopupTypeEditSubmit(evt) {
     if (data) {
       profileTitle.textContent = data.name;
       profileDescription.textContent = data.about;
-
-      closeModal(popupTypeEdit);
     }
-  })
-  .then(() => {
-    clearValidation(popupTypeEdit, validationConfig);
     closeModal(popupTypeEdit);
   })
   .catch(err => console.log(`Ошибка при обновлении профиля: ${err}`))
@@ -67,11 +64,9 @@ function handlePopupTypeNewCardSubmit(evt) {
       const card = createCard(data, profileID, deleteCard, likeCard, popupImageView);
 
       cardsContainer.prepend(card);
+
+      closeModal(popupTypeNewCard);
     }
-  })
-  .then(() => {
-    clearValidation(popupTypeNewCard, validationConfig);
-    closeModal(popupTypeNewCard);
   })
   .catch(err => console.log(`Ошибка при добавлении карточки: ${err}`))
   .finally(() => {
@@ -88,11 +83,8 @@ function handlePopupTypeEditAvatarSubmit(evt) {
   .then((profileData) => {
     if (profileData) {
       profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
+      closeModal(popupTypeEditAvatar);
     }
-  })
-  .then(() => {
-    clearValidation(popupTypeEditAvatar, validationConfig);
-    closeModal(popupTypeEditAvatar);
   })
   .catch(err => console.log(`Ошибка при обновлении аватара: ${err}`))
   .finally(() => {
@@ -101,25 +93,24 @@ function handlePopupTypeEditAvatarSubmit(evt) {
 }
 
 function popupImageView(cardImage, cardTitle) {
-  const popupImage = popupTypeImage.querySelector('.popup__image');
-  const popupCaption = popupTypeImage.querySelector('.popup__caption');
+  popupTypeImageImage.src = cardImage.src;
+  popupTypeImageImage.alt = cardTitle.textContent;
+  popupTypeImageCaption.textContent = cardTitle.textContent;
 
-  popupImage.src = cardImage.src;
-  popupImage.alt = cardTitle.textContent;
-  popupCaption.textContent = cardTitle.textContent;
+  openModal(popupTypeImage);
 }
 
-buttonEdit.addEventListener('click', () => openModal(popupTypeEdit));
+buttonEdit.addEventListener('click', () => {
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
+
+  clearValidation(popupTypeEdit, validationConfig)
+  openModal(popupTypeEdit);
+});
 
 buttonAdd.addEventListener('click', () => openModal(popupTypeNewCard));
 
 buttonEditAvatar.addEventListener('click', () => openModal(popupTypeEditAvatar));
-
-cardsContainer.addEventListener('click', function (evt) {
-  if (evt.target.classList.contains('card__image')) {
-    openModal(popupTypeImage);
-  }
-});
 
 initCloseClick(documentPopups);
 
