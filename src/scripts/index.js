@@ -37,17 +37,17 @@ function handlePopupTypeEditSubmit(evt) {
   buttonSubmit.textContent = 'Сохранение...';
 
   updateProfile(nameInput.value, jobInput.value)
-  .then(data => {
-    if (data) {
-      profileTitle.textContent = data.name;
-      profileDescription.textContent = data.about;
-    }
-    closeModal(popupTypeEdit);
-  })
-  .catch(err => console.log(`Ошибка при обновлении профиля: ${err}`))
-  .finally(() => {
-    buttonSubmit.textContent = 'Сохранить';
-  });
+    .then(data => {
+      if (data) {
+        profileTitle.textContent = data.name;
+        profileDescription.textContent = data.about;
+      }
+      closeModal(popupTypeEdit);
+    })
+    .catch(err => console.log(`Ошибка при обновлении профиля: ${err}`))
+    .finally(() => {
+      buttonSubmit.textContent = 'Сохранить';
+    });
 }
 
 
@@ -58,20 +58,20 @@ function handlePopupTypeNewCardSubmit(evt) {
   buttonSubmit.textContent = 'Сохранение...';
 
   addNewCard(placeNameInput.value, linkInput.value)
-  .then(data => {
-    if (data) {
-      const profileID = data.owner._id;
-      const card = createCard(data, profileID, deleteCard, likeCard, popupImageView);
+    .then(data => {
+      if (data) {
+        const profileID = data.owner._id;
+        const card = createCard(data, profileID, deleteCard, likeCard, popupImageView);
 
-      cardsContainer.prepend(card);
+        cardsContainer.prepend(card);
 
-      closeModal(popupTypeNewCard);
-    }
-  })
-  .catch(err => console.log(`Ошибка при добавлении карточки: ${err}`))
-  .finally(() => {
-    buttonSubmit.textContent = 'Сохранить';
-  });
+        closeModal(popupTypeNewCard);
+      }
+    })
+    .catch(err => console.log(`Ошибка при добавлении карточки: ${err}`))
+    .finally(() => {
+      buttonSubmit.textContent = 'Сохранить';
+    });
 }
 
 function handlePopupTypeEditAvatarSubmit(evt) {
@@ -80,16 +80,16 @@ function handlePopupTypeEditAvatarSubmit(evt) {
   buttonSubmit.textContent = 'Cохранение...';
 
   updateAvatar(avatarLinkInput.value)
-  .then((profileData) => {
-    if (profileData) {
-      profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
-      closeModal(popupTypeEditAvatar);
-    }
-  })
-  .catch(err => console.log(`Ошибка при обновлении аватара: ${err}`))
-  .finally(() => {
-    buttonSubmit.textContent = 'Сохранить';
-  })
+    .then((profileData) => {
+      if (profileData) {
+        profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
+        closeModal(popupTypeEditAvatar);
+      }
+    })
+    .catch(err => console.log(`Ошибка при обновлении аватара: ${err}`))
+    .finally(() => {
+      buttonSubmit.textContent = 'Сохранить';
+    })
 }
 
 function popupImageView(cardImage, cardTitle) {
@@ -115,7 +115,8 @@ buttonAdd.addEventListener('click', () => {
 
 buttonEditAvatar.addEventListener('click', () => {
   clearValidation(popupTypeEditAvatar, validationConfig);
-  openModal(popupTypeEditAvatar)});
+  openModal(popupTypeEditAvatar)
+});
 
 initCloseClick(documentPopups);
 
@@ -139,21 +140,21 @@ enableValidation(validationConfig);
 
 function loadProfileAndCards() {
   getProfileAndCards()
-  .then(({profileData, cards}) => {
-    if (profileData) {
-      profileTitle.textContent = profileData.name;
-      profileDescription.textContent = profileData.about;
-      profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
-    }
-    if (cards) {
-      cards.forEach((card) => {
-        addCard(card, profileData._id);
-      });
-    }
-  })
-  .catch(err => {
-    console.log(`Произошла ошибка при загрузке данных: ${err}`);
-  });
+    .then(({profileData, cards}) => {
+      if (profileData) {
+        profileTitle.textContent = profileData.name;
+        profileDescription.textContent = profileData.about;
+        profileImage.style.backgroundImage = `url('${profileData.avatar}')`;
+      }
+      if (cards) {
+        cards.forEach((card) => {
+          addCard(card, profileData._id);
+        });
+      }
+    })
+    .catch(err => {
+      console.log(`Произошла ошибка при загрузке данных: ${err}`);
+    });
 }
 
 loadProfileAndCards();

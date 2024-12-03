@@ -34,29 +34,29 @@ export function createCard(cardData, profileDataID, deleteCard, handleLikeClick,
 
 export function deleteCard(card, cardID) {
   deleteCardAPI(cardID)
-  .then(() => {
-    card.remove();
-  })
-  .catch(err => console.error(`Ошибка при выполнении операции: ${err}`));
+    .then(() => {
+      card.remove();
+    })
+    .catch(err => console.error(`Ошибка при выполнении операции: ${err}`));
 }
 
 export function likeCard(button, cardData, profileDataID, likeCounter) {
   const isLiked = isCardLiked(cardData, profileDataID);
 
   toggleLike(cardData._id, isLiked)
-  .then(updatedCard => {
-    cardData.likes = updatedCard.likes;
-    likeCounter.textContent = cardData.likes.length;
+    .then(updatedCard => {
+      cardData.likes = updatedCard.likes;
+      likeCounter.textContent = cardData.likes.length;
 
-    if (isLiked) {
-      button.classList.remove('card__like-button_is-active');
-    } else {
-      button.classList.add('card__like-button_is-active');
-    }
-  })
-  .catch((err) => {
-    `Не удалось поставить лайк: ${err}`
-  })
+      if (isLiked) {
+        button.classList.remove('card__like-button_is-active');
+      } else {
+        button.classList.add('card__like-button_is-active');
+      }
+    })
+    .catch((err) => {
+      `Не удалось поставить лайк: ${err}`
+    })
 }
 
 function isCardLiked(card, userID) {

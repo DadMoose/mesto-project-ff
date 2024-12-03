@@ -19,21 +19,21 @@ const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-  .then(checkResponse);
+    .then(checkResponse);
 }
 
 const getProfileInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-  .then(checkResponse);
+    .then(checkResponse);
 }
 
 export const getProfileAndCards = () => {
   return Promise.all([getProfileInfo(), getInitialCards()])
-  .then(([profileData, cards]) => {
-    return {profileData, cards};
-  })
+    .then(([profileData, cards]) => {
+      return {profileData, cards};
+    })
 }
 
 export const updateProfile = (name, description) => {
@@ -45,7 +45,7 @@ export const updateProfile = (name, description) => {
       about: `${description}`,
     })
   })
-  .then(checkResponse);
+    .then(checkResponse);
 }
 
 export const addNewCard = (name, link) => {
@@ -57,7 +57,7 @@ export const addNewCard = (name, link) => {
       link: `${link}`,
     })
   })
-  .then(checkResponse);
+    .then(checkResponse);
 }
 
 export const deleteCardAPI = (cardID) => {
@@ -75,7 +75,7 @@ export const toggleLike = (cardID, isLiked) => {
     method: `${method}`,
     headers: config.headers
   })
-  .then(checkResponse);
+    .then(checkResponse);
 }
 
 export const updateAvatar = (link) => {
@@ -86,5 +86,5 @@ export const updateAvatar = (link) => {
       avatar: `${link}`,
     })
   })
-  .then(checkResponse);
+    .then(checkResponse);
 }
