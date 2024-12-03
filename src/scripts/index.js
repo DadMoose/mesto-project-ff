@@ -1,6 +1,6 @@
 import {openModal, closeModal, initCloseClick} from './components/modal.js';
 import {createCard, deleteCard, likeCard} from './components/card.js';
-import {enableValidation, clearValidation, toggleButtonState} from "./components/validation.js";
+import {enableValidation, clearValidation} from "./components/validation.js";
 import {addNewCard, getProfileAndCards, updateAvatar, updateProfile} from "./components/api.js";
 import '../pages/index.css';
 
@@ -104,13 +104,18 @@ buttonEdit.addEventListener('click', () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
 
-  clearValidation(popupTypeEdit, validationConfig)
+  clearValidation(popupTypeEdit, validationConfig);
   openModal(popupTypeEdit);
 });
 
-buttonAdd.addEventListener('click', () => openModal(popupTypeNewCard));
+buttonAdd.addEventListener('click', () => {
+  clearValidation(popupTypeNewCard, validationConfig);
+  openModal(popupTypeNewCard)
+});
 
-buttonEditAvatar.addEventListener('click', () => openModal(popupTypeEditAvatar));
+buttonEditAvatar.addEventListener('click', () => {
+  clearValidation(popupTypeEditAvatar, validationConfig);
+  openModal(popupTypeEditAvatar)});
 
 initCloseClick(documentPopups);
 

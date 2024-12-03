@@ -3,9 +3,15 @@ export function openModal(popup) {
     document.addEventListener('keydown', handleEscKeyUp);
 }
 
-export function closeModal(modal) {
-    modal.classList.remove('popup_is-opened')
+export function closeModal(popup) {
+    const form = popup.querySelector('.popup__form');
+
+    popup.classList.remove('popup_is-opened')
     document.removeEventListener('keydown', handleEscKeyUp);
+
+    if (form) {
+        form.reset();
+    }
 }
 
 export function initCloseClick(popups) {
