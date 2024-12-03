@@ -65,6 +65,7 @@ export const deleteCardAPI = (cardID) => {
     method: 'DELETE',
     headers: config.headers
   })
+    .then(checkResponse);
 }
 
 export const toggleLike = (cardID, isLiked) => {

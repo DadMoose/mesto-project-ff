@@ -34,12 +34,8 @@ export function createCard(cardData, profileDataID, deleteCard, handleLikeClick,
 
 export function deleteCard(card, cardID) {
   deleteCardAPI(cardID)
-  .then((res) => {
-    if (res) {
-      return card.remove();
-    }
-    return Promise.reject(`Ошибка при удалении карточки: статус ${res.status}`);
-
+  .then(() => {
+    card.remove();
   })
   .catch(err => console.error(`Ошибка при выполнении операции: ${err}`));
 }
